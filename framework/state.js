@@ -23,9 +23,5 @@ export function createState(initialState = {}) {
         listeners.push(listener);
     }
 
-    return {
-        getState,
-        setState,
-        addStateListener
-    };
+    return {getState,setState,addStateListener};
 }

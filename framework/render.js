@@ -17,12 +17,20 @@ export function render(vnode) {
     return element;
 }
 
-// Event handling functions
 export function isEvent(key) {
     return key.startsWith("on");
 }
-export function addEvent(element, eventName, handler) {
-    const eventType = eventName.slice(2).toLowerCase();
 
-    element.addEventListener(eventType, handler);
+export function getEventType(eventName) {
+    return eventName.slice(2).toLowerCase();
+}
+
+export function addEvent(element, eventName, handler) {
+    const eventType = getEventType(eventName);
+    element.addEventListener(eventType,handler);
+}
+
+export function removeEvent(element,eventName,handler) {
+    const eventType = getEventType(eventName);
+    element.removeEventListener(eventType,handler);
 }

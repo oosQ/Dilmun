@@ -1,19 +1,16 @@
 import { render } from "./render.js";
+import {isEvent,addEvent,removeEvent } from "./render.js";
 
 export function patch(parent, newVNode, oldVNode, index = 0) {
-    if (!parent) {
-        return;
-    }
-
+    if (!parent) return;
     const element = parent.childNodes[index];
-
-    // Element didn't exist before
+    // 1. New node was added
     if (!oldVNode) {
         parent.appendChild(render(newVNode));
         return;
     }
 
-    // Element was removed
+    // 2. Old node was removed
     if (!newVNode) {
         if (element) {
             parent.removeChild(element);
@@ -21,7 +18,7 @@ export function patch(parent, newVNode, oldVNode, index = 0) {
         return;
     }
 
-    // Element changed
+    // 3. Node itself changed
     if (changed(newVNode, oldVNode)) {
         if (element) {
             parent.replaceChild(render(newVNode),element);
@@ -29,20 +26,94 @@ export function patch(parent, newVNode, oldVNode, index = 0) {
         return;
     }
 
-    // Same element -> compare children
-    if (newVNode.tag !== null && element) {
-        const maxChildren = Math.max(newVNode.children.length,oldVNode.children.length);
-        for (let i = 0; i < maxChildren; i++) {
-            patch(element,newVNode.children[i],oldVNode.children[i],i);
-        }
+    // Text nodes have no attrs or children to inspect
+    if (newVNode.tag === null) {
+        return;
+    }
+
+    // 4. Update attributes and events
+    updateAttributes(element,newVNode.attrs,oldVNode.attrs);
+
+    // 5. Compare children recursively
+    const maxChildren = Math.max(newVNode.children.length,oldVNode.children.length);
+
+    for (let i = 0; i < maxChildren; i++) {
+        patch(element,newVNode.children[i],oldVNode.children[i],i);
     }
 }
 
 function changed(newVNode, oldVNode) {
     // Both are text nodes
-    if (newVNode.tag === null && oldVNode.tag === null) {
+    if (newVNode.tag === null &&oldVNode.tag === null) {
         return newVNode.text !== oldVNode.text;
     }
-    // HTML tag changed
+    // One is text and the other is an HTML element
+    if (newVNode.tag === null ||oldVNode.tag === null) {
+        return true;
+    }
+    // Different HTML tag
     return newVNode.tag !== oldVNode.tag;
+}
+
+function updateAttributes(element, newAttrs, oldAttrs) {
+    // Remove attributes/events that no longer exist
+    for (const [key, oldValue] of Object.entries(oldAttrs)) {
+        if (!(key in newAttrs)) {
+            if (isEvent(key)) {
+                removeEvent(element,key,oldValue);
+            } else {
+                removeAttribute(element, key);
+            }
+        }
+    }
+
+    // Add/update attributes & events
+    for (const [key, newValue] of Object.entries(newAttrs)) {
+        const oldValue = oldAttrs[key];
+        if (isEvent(key)) {
+            if (oldValue !== newValue) {
+                if (oldValue) {
+                    removeEvent(element,key,oldValue);
+                }
+                addEvent(element,key,newValue);
+            }
+            continue;
+        }
+        if (oldValue !== newValue) {
+            setAttribute(element,key,newValue);
+        }
+    }
+}
+
+function setAttribute(element, key, value) {
+    if (key === "checked") {
+        element.checked = Boolean(value);
+        return;
+    }
+
+    if (key === "value") {
+        element.value = value ?? "";
+        return;
+    }
+
+    if (value === false || value === null || value === undefined) {
+        element.removeAttribute(key);
+        return;
+    }
+
+    element.setAttribute(key, value);
+}
+
+function removeAttribute(element, key) {
+    if (key === "checked") {
+        element.checked = false;
+        return;
+    }
+
+    if (key === "value") {
+        element.value = "";
+        return;
+    }
+
+    element.removeAttribute(key);
 }

@@ -7,7 +7,7 @@ export function render(vnode) {
     const element = document.createElement(vnode.tag);
     // Add attributes
     for (const [key, value] of Object.entries(vnode.attrs)) {
-        element.setAttribute(key, value);
+        isEvent(key) ? addEvent(element, key, value) : element.setAttribute(key, value);
     }
     // Render childs recursively
     vnode.children.forEach(child => {
@@ -15,4 +15,14 @@ export function render(vnode) {
     });
 
     return element;
+}
+
+// Event handling functions
+export function isEvent(key) {
+    return key.startsWith("on");
+}
+export function addEvent(element, eventName, handler) {
+    const eventType = eventName.slice(2).toLowerCase();
+
+    element.addEventListener(eventType, handler);
 }

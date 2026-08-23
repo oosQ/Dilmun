@@ -1,26 +1,39 @@
 import { createElement } from "./dom.js";
 import { render } from "./render.js";
+import { createState } from "./state.js";
 
-const app = createElement(
-    "div",
-    {
-        id: "app",
-        class: "container"
-    },
+const variables = createState({
+    count: 0
+});
 
-    createElement(
-        "h1",
-        { class: "title" },
-        "My Mini Framework"
-    ),
+function App() {
+    return createElement(
+        "button",
+        {
+            onclick: () => {
+                const current = variables.getState().count;
 
-    createElement(
-        "p",
-        {},
-        "Built without React!"
-    )
-);
+                variables.setState({
+                    count: current + 1
+                });
+            }
+        },
+        "+1",
+        createElement(
+            "span",
+            {},
+            ` Count: ${variables.getState().count}`
+        )
+    );
+}
 
-const realDOM = render(app);
+function updateScreen() {
+    document.body.innerHTML = "";
+    document.body.appendChild(render(App()));
+}
 
-document.getElementById("app").appendChild(realDOM);
+variables.addStateListener(() => {
+    updateScreen();
+});
+
+updateScreen();

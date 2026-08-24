@@ -1,38 +1,72 @@
 import { createElement } from "./dom.js";
 import { render } from "./render.js";
-import { createState } from "./state.js";
 import { patch } from "./patch.js";
+import { createState } from "./state.js";
+import { createRouter } from "./router.js";
 
 const root = document.querySelector("#root");
 
-const variables = createState({
-    count: 0
+const store = createState({
+    filter: "all"
 });
 
 let oldVNode = null;
 
+const router = createRouter({
+    "/": () => {
+        store.setState({
+            filter: "all"
+        });
+    },
+
+    "/active": () => {
+        store.setState({
+            filter: "active"
+        });
+    },
+
+    "/completed": () => {
+        store.setState({
+            filter: "completed"
+        });
+    }
+});
+
 function App() {
+    const state = store.getState();
 
     return createElement(
-        "button",
-        {
-            onclick: () => {
-
-                const current =
-                    variables.getState().count;
-
-                variables.setState({
-                    count: current + 1
-                });
-            }
-        },
-
-        "+1",
+        "div",
+        {},
 
         createElement(
-            "span",
+            "h1",
             {},
-            ` Count: ${variables.getState().count}`
+            `Current filter: ${state.filter}`
+        ),
+
+        createElement(
+            "button",
+            {
+                onclick: () => router.navigate("/")
+            },
+            "All"
+        ),
+
+        createElement(
+            "button",
+            {
+                onclick: () => router.navigate("/active")
+            },
+            "Active"
+        ),
+
+        createElement(
+            "button",
+            {
+                onclick: () => router.navigate("/completed")
+            },
+            "Completed"
         )
     );
 }
@@ -47,8 +81,9 @@ function updateScreen() {
     oldVNode = newVNode;
 }
 
-variables.addStateListener(() => {
+store.addStateListener(() => {
     updateScreen();
 });
 
 updateScreen();
+router.changeRoute();

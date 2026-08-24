@@ -1,16 +1,16 @@
 import { createElement } from "./dom.js";
 import { render } from "./render.js";
-import { patch } from "./patch.js";
+import { changeDOM } from "./changer.js";
 import { createState } from "./state.js";
 import { createRouter } from "./router.js";
 
 const root = document.querySelector("#root");
+let oldVNode = null;
 
 const store = createState({
+    todos : [],
     filter: "all"
 });
-
-let oldVNode = null;
 
 const router = createRouter({
     "/": () => {
@@ -76,7 +76,7 @@ function updateScreen() {
     if (oldVNode === null) {
         root.appendChild(render(newVNode));
     } else {
-        patch(root,newVNode,oldVNode);
+        changeDOM(root,newVNode,oldVNode);
     }
     oldVNode = newVNode;
 }

@@ -1,16 +1,17 @@
 import { render } from "./render.js";
 import {isEvent,addEvent,removeEvent } from "./render.js";
 
-export function patch(parent, newVNode, oldVNode, index = 0) {
+export function changeDOM(parent, newVNode, oldVNode, index = 0) {
     if (!parent) return;
     const element = parent.childNodes[index];
-    // 1. New node was added
+
+    // 1. Add new node if old node changed
     if (!oldVNode) {
         parent.appendChild(render(newVNode));
         return;
     }
 
-    // 2. Old node was removed
+    // 2. Remove node if new node changed
     if (!newVNode) {
         if (element) {
             parent.removeChild(element);
@@ -19,7 +20,7 @@ export function patch(parent, newVNode, oldVNode, index = 0) {
     }
 
     // 3. Node itself changed
-    if (changed(newVNode, oldVNode)) {
+    if (isChanged(newVNode, oldVNode)) {
         if (element) {
             parent.replaceChild(render(newVNode),element);
         }
@@ -38,17 +39,17 @@ export function patch(parent, newVNode, oldVNode, index = 0) {
     const maxChildren = Math.max(newVNode.children.length,oldVNode.children.length);
 
     for (let i = 0; i < maxChildren; i++) {
-        patch(element,newVNode.children[i],oldVNode.children[i],i);
+        changeDOM(element,newVNode.children[i],oldVNode.children[i],i);
     }
 }
 
-function changed(newVNode, oldVNode) {
+function isChanged(newVNode, oldVNode) {
     // Both are text nodes
-    if (newVNode.tag === null &&oldVNode.tag === null) {
+    if (newVNode.tag === null && oldVNode.tag === null) {
         return newVNode.text !== oldVNode.text;
     }
     // One is text and the other is an HTML element
-    if (newVNode.tag === null ||oldVNode.tag === null) {
+    if (newVNode.tag === null || oldVNode.tag === null) {
         return true;
     }
     // Different HTML tag

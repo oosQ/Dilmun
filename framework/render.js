@@ -7,7 +7,7 @@ export function render(vnode) {
     const element = document.createElement(vnode.tag);
     // Add attributes
     for (const [key, value] of Object.entries(vnode.attrs)) {
-        isEvent(key) ? addEvent(element, key, value) : element.setAttribute(key, value);
+        isEvent(key) ? addEvent(element, key, value) : setAttribute(element, key, value);
     }
     // Render childs recursively
     vnode.children.forEach(child => {
@@ -15,6 +15,25 @@ export function render(vnode) {
     });
 
     return element;
+}
+
+function setAttribute(element, key, value) {
+    if (key === "checked") {
+        element.checked = Boolean(value);
+        return;
+    }
+
+    if (key === "value") {
+        element.value = value ?? "";
+        return;
+    }
+
+    if (value === false || value === null || value === undefined) {
+        element.removeAttribute(key);
+        return;
+    }
+
+    element.setAttribute(key, value);
 }
 
 export function isEvent(key) {

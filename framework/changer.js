@@ -5,13 +5,13 @@ export function changeDOM(parent, newVNode, oldVNode, index = 0) {
     if (!parent) return;
     const element = parent.childNodes[index];
 
-    // 1. Add new node if old node changed
+    // Add new node if old node changed
     if (!oldVNode) {
         parent.appendChild(render(newVNode));
         return;
     }
 
-    // 2. Remove node if new node changed
+    // Remove node if new node changed
     if (!newVNode) {
         if (element) {
             parent.removeChild(element);
@@ -19,7 +19,7 @@ export function changeDOM(parent, newVNode, oldVNode, index = 0) {
         return;
     }
 
-    // 3. Node itself changed
+    // replace node if tag or text changed
     if (isChanged(newVNode, oldVNode)) {
         if (element) {
             parent.replaceChild(render(newVNode),element);
@@ -27,19 +27,29 @@ export function changeDOM(parent, newVNode, oldVNode, index = 0) {
         return;
     }
 
-    // Text nodes have no attrs or children to inspect
+    // Text nodes have no attrs or children
     if (newVNode.tag === null) {
         return;
     }
 
-    // 4. Update attributes and events
+    // Update attributes and events
     updateAttributes(element,newVNode.attrs,oldVNode.attrs);
 
-    // 5. Compare children recursively
-    const maxChildren = Math.max(newVNode.children.length,oldVNode.children.length);
+    // Compare children recursively
+    const sharedChildren = Math.min(newVNode.children.length,oldVNode.children.length);
 
-    for (let i = 0; i < maxChildren; i++) {
+    for (let i = 0; i < sharedChildren; i++) {
         changeDOM(element,newVNode.children[i],oldVNode.children[i],i);
+    }
+
+    for (let i = sharedChildren; i < newVNode.children.length; i++) {
+        element.appendChild(render(newVNode.children[i]));
+    }
+
+    for (let i = oldVNode.children.length - 1; i >= newVNode.children.length; i--) {
+        if (element.childNodes[i]) {
+            element.removeChild(element.childNodes[i]);
+        }
     }
 }
 

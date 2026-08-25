@@ -5,35 +5,25 @@ export function Footer(remaining,filter,hasCompleted,router,onClearCompleted) {
         createElement(
             "span",
             { class: "todo-count" },
-
             createElement(
                 "strong",
                 {},
                 remaining
             ),
-
-            remaining === 1
-                ? " item left"
-                : " items left"
+            remaining === 1 ? " item left" : " items left"
         ),
 
         createElement(
             "ul",
             { class: "filters" },
-
             createElement(
                 "li",
                 {},
-
                 createElement(
                     "a",
                     {
                         href: "#/",
-                        class:
-                            filter === "all"
-                                ? "selected"
-                                : "",
-
+                        class: filter === "all" ? "selected" : "",
                         onclick: () => {
                             router.navigate("/");
                         }
@@ -45,16 +35,11 @@ export function Footer(remaining,filter,hasCompleted,router,onClearCompleted) {
             createElement(
                 "li",
                 {},
-
                 createElement(
                     "a",
                     {
                         href: "#/active",
-                        class:
-                            filter === "active"
-                                ? "selected"
-                                : "",
-
+                        class: filter === "active" ? "selected" : "",
                         onclick: () => {
                             router.navigate("/active");
                         }
@@ -66,16 +51,11 @@ export function Footer(remaining,filter,hasCompleted,router,onClearCompleted) {
             createElement(
                 "li",
                 {},
-
                 createElement(
                     "a",
                     {
                         href: "#/completed",
-                        class:
-                            filter === "completed"
-                                ? "selected"
-                                : "",
-
+                        class:filter === "completed" ? "selected" : "",
                         onclick: () => {
                             router.navigate("/completed");
                         }

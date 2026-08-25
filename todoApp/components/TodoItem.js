@@ -43,7 +43,6 @@ export function TodoItem( todo, onToggle, onDelete, onStartEdit, onSaveEdit, onC
                 {
                     class: "destroy",
                     title: "Delete",
-
                     onclick: () => {
                         onDelete(todo.id);
                     }
@@ -52,7 +51,7 @@ export function TodoItem( todo, onToggle, onDelete, onStartEdit, onSaveEdit, onC
                 createElement(
                     "i",
                     {
-                        class: "fa-solid fa-xmark"
+                        class: "fas fa-times"
                     }
                 )
             )
@@ -66,7 +65,6 @@ export function TodoItem( todo, onToggle, onDelete, onStartEdit, onSaveEdit, onC
                 {
                     class: "edit",
                     value: todo.title,
-
                     onkeydown: event => {
                         if (event.key === "Enter") {
                             onSaveEdit(
@@ -74,7 +72,6 @@ export function TodoItem( todo, onToggle, onDelete, onStartEdit, onSaveEdit, onC
                                 event.target.value
                             );
                         }
-
                         if (event.key === "Escape") {
                             onCancelEdit(todo.id);
                         }

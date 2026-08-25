@@ -4,7 +4,6 @@ export function Info() {
     return createElement(
         "footer",
         { class: "info" },
-
         createElement(
             "p",
             {},

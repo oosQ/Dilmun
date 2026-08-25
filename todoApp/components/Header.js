@@ -4,31 +4,26 @@ export function Header(onAddTodo) {
     return createElement(
         "header",
         { class: "header" },
-
         createElement(
             "div",
             { class: "brand" },
-
             createElement(
                 "div",
                 { class: "brand-icon" },
-
                 createElement(
                     "i",
-                    { class: "fa-solid fa-check" }
+                    { class: "fas fa-check" }
                 )
             ),
 
             createElement(
                 "div",
                 {},
-
                 createElement(
                     "h1",
                     {},
                     "My Tasks"
                 ),
-
                 createElement(
                     "p",
                     { class: "subtitle" },
@@ -40,19 +35,16 @@ export function Header(onAddTodo) {
         createElement(
             "div",
             { class: "input-wrapper" },
-
             createElement(
                 "i",
-                { class: "fa-solid fa-plus" }
+                { class: "fas fa-plus" }
             ),
-
             createElement(
                 "input",
                 {
                     class: "new-todo",
                     placeholder: "What needs to be done?",
                     autofocus: true,
-
                     onkeydown: event => {
                         if (event.key !== "Enter") {
                             return;

@@ -1,6 +1,6 @@
 import { createElement } from "../../framework/index.js";
 
-export function Header() {
+export function Header(onAddTodo) {
     return createElement(
         "header",
         { class: "header" },
@@ -10,9 +10,13 @@ export function Header() {
             { class: "brand" },
 
             createElement(
-                "span",
+                "div",
                 { class: "brand-icon" },
-                createElement("i", { class: "fa fa-check" })
+
+                createElement(
+                    "i",
+                    { class: "fa-solid fa-check" }
+                )
             ),
 
             createElement(
@@ -39,7 +43,7 @@ export function Header() {
 
             createElement(
                 "i",
-                { class: "fa fa-plus" }
+                { class: "fa-solid fa-plus" }
             ),
 
             createElement(
@@ -47,7 +51,19 @@ export function Header() {
                 {
                     class: "new-todo",
                     placeholder: "What needs to be done?",
-                    autofocus: true
+                    autofocus: true,
+
+                    onkeydown: event => {
+                        if (event.key !== "Enter") {
+                            return;
+                        }
+                        const title = event.target.value.trim()
+                        if (!title) {
+                            return;
+                        }
+                        onAddTodo(title);
+                        event.target.value = "";
+                    }
                 }
             )
         )

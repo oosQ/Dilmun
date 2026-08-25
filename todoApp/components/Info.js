@@ -9,6 +9,12 @@ export function Info() {
             "p",
             {},
             "Double-click to edit a todo"
+        ),
+
+        createElement(
+            "p",
+            {},
+            "Built in Reboot01 institute"
         )
     );
 }

@@ -1,10 +1,7 @@
 import { createElement } from "../../framework/index.js";
 
-export function Footer() {
-    return createElement(
-        "footer",
-        { class: "footer" },
-
+export function Footer(remaining,filter,hasCompleted,router,onClearCompleted) {
+    const children = [
         createElement(
             "span",
             { class: "todo-count" },
@@ -12,10 +9,12 @@ export function Footer() {
             createElement(
                 "strong",
                 {},
-                "0"
+                remaining
             ),
 
-            " items left"
+            remaining === 1
+                ? " item left"
+                : " items left"
         ),
 
         createElement(
@@ -25,11 +24,19 @@ export function Footer() {
             createElement(
                 "li",
                 {},
+
                 createElement(
                     "a",
                     {
                         href: "#/",
-                        class: "selected"
+                        class:
+                            filter === "all"
+                                ? "selected"
+                                : "",
+
+                        onclick: () => {
+                            router.navigate("/");
+                        }
                     },
                     "All"
                 )
@@ -38,10 +45,19 @@ export function Footer() {
             createElement(
                 "li",
                 {},
+
                 createElement(
                     "a",
                     {
-                        href: "#/active"
+                        href: "#/active",
+                        class:
+                            filter === "active"
+                                ? "selected"
+                                : "",
+
+                        onclick: () => {
+                            router.navigate("/active");
+                        }
                     },
                     "Active"
                 )
@@ -50,22 +66,42 @@ export function Footer() {
             createElement(
                 "li",
                 {},
+
                 createElement(
                     "a",
                     {
-                        href: "#/completed"
+                        href: "#/completed",
+                        class:
+                            filter === "completed"
+                                ? "selected"
+                                : "",
+
+                        onclick: () => {
+                            router.navigate("/completed");
+                        }
                     },
                     "Completed"
                 )
             )
-        ),
-
-        createElement(
-            "button",
-            {
-                class: "clear-completed"
-            },
-            "Clear completed"
         )
+    ];
+
+    if (hasCompleted) {
+        children.push(
+            createElement(
+                "button",
+                {
+                    class: "clear-completed",
+                    onclick: onClearCompleted
+                },
+                "Clear completed"
+            )
+        );
+    }
+
+    return createElement(
+        "footer",
+        { class: "footer" },
+        children
     );
 }

@@ -1,6 +1,7 @@
 import { createElement } from "../../framework/index.js";
+import { TodoItem } from "./TodoItem.js";
 
-export function TodoList() {
+export function TodoList(todos,allCompleted,handlers) {
     return createElement(
         "section",
         { class: "main" },
@@ -10,19 +11,30 @@ export function TodoList() {
             {
                 id: "toggle-all",
                 class: "toggle-all",
-                type: "checkbox"
+                type: "checkbox",
+                checked: allCompleted,
+
+                onchange: () => {
+                    handlers.onToggleAll();
+                }
             }
         ),
 
         createElement(
             "label",
-            { for: "toggle-all" },
+            {
+                for: "toggle-all"
+            },
             "Mark all as complete"
         ),
 
         createElement(
             "ul",
-            { class: "todo-list" }
+            { class: "todo-list" },
+
+            todos.map(todo =>
+                TodoItem( todo, handlers.onToggle, handlers.onDelete, handlers.onStartEdit, handlers.onSaveEdit, handlers.onCancelEdit)
+            )
         )
     );
 }

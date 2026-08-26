@@ -1,7 +1,6 @@
 # Dilmun Framework
 
-Dilmun is a small JavaScript framework behave React library. It provides element creation, DOM rendering and updating, state
-management, event handling, and Routing.
+Dilmun is a small JavaScript framework that behave like a React library. It provides element creation, DOM rendering and updating, state management, event handling, and Routing.
 
 ## Getting started
 
@@ -27,13 +26,15 @@ python3 -m http.server 8000
 The Todo app will be available at
 `http://localhost:8000/todoApp/`.
 
+Also, you can run the tests in `testing/index.html` to see the framework in action.
+
 ## Creating elements
 
 `createElement(tag, attributes, ...children)` returns a virtual DOM object.
 Text and numbers passed as children are automatically converted to text nodes.
 
 ```js
-const title = createElement("h1", {}, "My tasks");
+const title = createElement("h1", {}, "Test Framework");
 document.querySelector("#root").appendChild(render(title));
 ```
 
@@ -54,7 +55,7 @@ const card = createElement(
         "button",
         {
             class: "complete-button",
-            onclick: () => console.log("Completed")
+            onclick: () => alert("Completed")
         },
         "Complete"
     )

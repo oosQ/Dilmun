@@ -7,7 +7,7 @@ export function Info() {
         createElement(
             "p",
             {},
-            "Double-click to edit a todo"
+            "Double-click to edit a todo - (Enter to save, Esc to cancel)"
         ),
 
         createElement(

@@ -90,7 +90,7 @@ function updateAttributes(element, newAttrs, oldAttrs) {
             }
             continue;
         }
-        if (oldValue !== newValue) {
+        if (key === "checked" || oldValue !== newValue) {
             setAttribute(element,key,newValue);
         }
     }

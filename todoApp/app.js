@@ -1,5 +1,4 @@
 import {createElement,render,changeDOM,createState,createRouter} from "../framework/index.js";
-
 import { Header } from "./components/Header.js";
 import { TodoList } from "./components/TodoList.js";
 import { Footer } from "./components/Footer.js";
@@ -118,6 +117,12 @@ function startEdit(id) {
     store.setState({
         todos
     });
+
+    const editInput = root.querySelector(".todo-list li.editing .edit");
+    if (editInput) {
+        editInput.focus();
+        editInput.setSelectionRange(editInput.value.length, editInput.value.length);
+    }
 }
 
 
@@ -130,7 +135,6 @@ function saveEdit(id, value) {
     }
 
     const state = store.getState();
-
     const todos = state.todos.map(todo => {
 
         if (todo.id === id) {
@@ -193,7 +197,7 @@ function App() {
     const state = store.getState();
     const visibleTodos = getVisibleTodos(state);
     const remaining = state.todos.filter( todo => !todo.completed).length;
-    const hasCompleted = state.todos.some(todo => todo.completed);
+    const hasCompleted = state.todos.some(todo => todo.completed) ;
     const allCompleted = state.todos.length > 0 && state.todos.every(todo => todo.completed);
     const appChildren = [ Header(addTodo)];
 
@@ -201,6 +205,7 @@ function App() {
         appChildren.push(
             TodoList(visibleTodos,allCompleted,
                 {
+                    currentRoute: router.currentRoute,
                     onToggle: toggleTodo,
                     onDelete: deleteTodo,
                     onToggleAll: toggleAll,
@@ -211,7 +216,7 @@ function App() {
             )
         );
         appChildren.push(
-            Footer(remaining,state.filter,hasCompleted,router,clearCompleted)
+            Footer(remaining,state.filter,hasCompleted && visibleTodos.length > 0 && state.filter !== "active",router,clearCompleted)
         );
     }
 

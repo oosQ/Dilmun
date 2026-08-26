@@ -20,13 +20,14 @@ export function TodoList(todos,allCompleted,handlers) {
             }
         ),
 
+        todos.length != 0 && (handlers.currentRoute === "/active" || handlers.currentRoute === "/") ?
         createElement(
             "label",
             {
                 for: "toggle-all"
             },
             "Mark all as complete"
-        ),
+        ) : "",
 
         createElement(
             "ul",

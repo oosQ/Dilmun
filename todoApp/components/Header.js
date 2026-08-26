@@ -9,20 +9,11 @@ export function Header(onAddTodo) {
             { class: "brand" },
             createElement(
                 "div",
-                { class: "brand-icon" },
-                createElement(
-                    "i",
-                    { class: "fas fa-check" }
-                )
-            ),
-
-            createElement(
-                "div",
                 {},
                 createElement(
                     "h1",
                     {},
-                    "My Tasks"
+                    "Todo-App"
                 ),
                 createElement(
                     "p",
